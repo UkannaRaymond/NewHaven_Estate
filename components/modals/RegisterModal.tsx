@@ -6,6 +6,10 @@ import { useState } from "react";
 import Button from "../ui/button";
 import Input from "../ui/Input";
 import { FcGoogle } from "react-icons/fc";
+import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { signInWithGoogle } from "@/services/signInWithGoogle";
 
 interface RegisterValues {
   name: "";
@@ -16,6 +20,7 @@ interface RegisterValues {
 type RegisterErrors = Partial<Record<keyof RegisterValues, string>>;
 
 export default function RegisterModal() {
+  const router = useRouter();
   const { openLogin, isRegisterOpen, closeRegister } = useAuthModalStore();
   const [values, setValues] = useState<RegisterValues>({
     name: "",
@@ -50,8 +55,8 @@ export default function RegisterModal() {
 
     //validate the email
     if (!values.email.trim()) {
-      newErrors.email = "Email is Required";
-    } else if (!/^\S+@\.\S+$/.test(values.email)) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
       newErrors.email = "Enter a valid email address";
     }
 
@@ -66,6 +71,45 @@ export default function RegisterModal() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const onSubmit = async (e: React.SubmitEvent) => {
+    e.preventDefault();
+
+    if (!validate()) return;
+
+    try {
+      setLoading(true);
+
+      const { error } = await authClient.signUp.email({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      });
+
+      if (error) {
+        toast.error(error.message as string);
+        return;
+      }
+
+      toast.success("Registration successful");
+      router.refresh();
+
+      setValues({
+        name: "",
+        email: "",
+        password: "",
+      });
+      closeRegister();
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Modal title="Register" onClose={closeRegister} isOpen={isRegisterOpen}>
       {/* header */}
@@ -76,7 +120,7 @@ export default function RegisterModal() {
         <p className="text-sm text-gray-500">Create an account</p>
       </div>
 
-      <form className="space-y-8">
+      <form onSubmit={onSubmit} className="space-y-8">
         <Input
           id="register-name"
           name="name"
@@ -105,6 +149,7 @@ export default function RegisterModal() {
           onChange={handleChange}
           error={errors.password}
           disabled={loading}
+          type="password"
         />
         <Button type="submit" fullWidth loading={loading}>
           Register
@@ -122,6 +167,7 @@ export default function RegisterModal() {
       </div>
 
       <Button
+        onClick={signInWithGoogle}
         variant="outline"
         fullWidth
         disabled={loading}

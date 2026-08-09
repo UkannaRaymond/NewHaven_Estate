@@ -7,6 +7,8 @@ import { IoClose } from "react-icons/io5";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { useAuthModalStore } from "@/store/useAuthModalStore";
 import { useCreatePropertModalStore } from "@/store/useCreatePropertyModal";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 interface NavbarProps {
   variant?: "transparent" | "solid";
@@ -15,11 +17,19 @@ interface NavbarProps {
 export const NavLinks = ["Home", "Properties", "MarketPlace"];
 
 export default function Navbar({ variant = "transparent" }: NavbarProps) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session, isPending } = authClient.useSession();
   const { openLogin } = useAuthModalStore();
   const { open: openCreateModal } = useCreatePropertModalStore();
 
   const isTransparent = variant === "transparent";
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    router.refresh();
+  };
+
   return (
     <section
       className={`top-0 left-0 z-50 w-full ${isTransparent ? "absolute" : "sticky border-b border-black/5 bg-card"}`}
@@ -53,12 +63,21 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
 
           {/* desktop buttons */}
           <div className="hidden lg:flex items-center gap-4">
-            <Button variant="outline" onClick={openLogin}>
-              Login
-            </Button>
-            <Button icon variant="outline" onClick={openCreateModal}>
-              Add Property
-            </Button>
+            {session ? (
+              <Button variant="outline" onClick={handleLogout}>
+                Logout
+              </Button>
+            ) : (
+              <Button variant="outline" onClick={openLogin}>
+                Login
+              </Button>
+            )}
+
+            {!isPending && session && (
+              <Button icon variant="outline" onClick={openCreateModal}>
+                Add Property
+              </Button>
+            )}
           </div>
 
           {/* mobile menu button */}
@@ -98,12 +117,20 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
                 </Link>
               ))}
               <div className="flex flex-col gap-3 mt-4">
-                <Button variant="outline" onClick={openLogin}>
-                  Login
-                </Button>
-                <Button icon variant="outline" onClick={openCreateModal}>
-                  Add Property
-                </Button>
+                {session ? (
+                  <Button variant="outline" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                ) : (
+                  <Button variant="outline" onClick={openLogin}>
+                    Login
+                  </Button>
+                )}
+                {!isPending && session && (
+                  <Button icon variant="outline" onClick={openCreateModal}>
+                    Add Property
+                  </Button>
+                )}
               </div>
             </div>
           </div>

@@ -6,6 +6,10 @@ import { useState } from "react";
 import Input from "../ui/Input";
 import Button from "../ui/button";
 import { FcGoogle } from "react-icons/fc";
+import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { signInWithGoogle } from "@/services/signInWithGoogle";
 
 interface LoginValues {
   email: string;
@@ -15,6 +19,7 @@ interface LoginValues {
 type LoginErrors = Partial<Record<keyof LoginValues, string>>;
 
 export default function LoginModal() {
+  const router = useRouter();
   const { openRegister, isLoginOpen, closeLogin } = useAuthModalStore();
   const [values, setValues] = useState<LoginValues>({
     email: "",
@@ -41,8 +46,8 @@ export default function LoginModal() {
 
     //validate the email
     if (!values.email.trim()) {
-      newErrors.email = "Email is Required";
-    } else if (!/^\S+@\.\S+$/.test(values.email)) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
       newErrors.email = "Enter a valid email address";
     }
 
@@ -57,6 +62,43 @@ export default function LoginModal() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const onSubmit = async (e: React.SubmitEvent) => {
+    e.preventDefault();
+
+    if (!validate()) return;
+
+    try {
+      setLoading(true);
+
+      const { error } = await authClient.signIn.email({
+        email: values.email,
+        password: values.password,
+      });
+
+      if (error) {
+        toast.error(error.message as string);
+        return;
+      }
+
+      toast.success("Login successful");
+      router.refresh();
+
+      setValues({
+        email: "",
+        password: "",
+      });
+      closeLogin();
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Modal title="Login" onClose={closeLogin} isOpen={isLoginOpen}>
       {/* header */}
@@ -65,7 +107,7 @@ export default function LoginModal() {
         <p className="text-sm text-gray-500">Login to your account</p>
       </div>
 
-      <form className="space-y-8">
+      <form onSubmit={onSubmit} className="space-y-8">
         <Input
           id="login-email"
           name="email"
@@ -84,6 +126,7 @@ export default function LoginModal() {
           onChange={handleChange}
           error={errors.password}
           disabled={loading}
+          type="password"
         />
         <Button type="submit" fullWidth loading={loading}>
           Continue
@@ -101,6 +144,7 @@ export default function LoginModal() {
       </div>
 
       <Button
+        onClick={signInWithGoogle}
         variant="outline"
         fullWidth
         disabled={loading}
