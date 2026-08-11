@@ -2,11 +2,12 @@
 
 import { useFilterModalStore } from "@/store/useFilterModalstore";
 import Modal from "./Modal";
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { propertyTypes } from "@/constants/PropertyTypes";
 import PropertyTypeCard from "../layout/PropertyTypeCard";
 import Button from "../ui/button";
 import Input from "../ui/Input";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const STEPS = {
   TYPE: 0,
@@ -14,14 +15,29 @@ const STEPS = {
   PRICE: 2,
 };
 
-export default function FilterModal() {
+function FilterModalContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { isOpen, close } = useFilterModalStore();
   const [step, setStep] = useState(STEPS.TYPE);
-  const [propertyType, setPropertyType] = useState("");
-  const [location, setLocation] = useState("");
-  const [address, setAddress] = useState("");
-  const [minprice, setMinPrice] = useState("");
-  const [maxprice, setMaxPrice] = useState("");
+  const [propertyType, setPropertyType] = useState(
+    searchParams.get("propertyType") || "",
+  );
+  const [location, setLocation] = useState(searchParams.get("location") || "");
+  const [address, setAddress] = useState(searchParams.get("address") || "");
+  const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
+  const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
+
+  useEffect(() => {
+    if (isOpen) {
+      setPropertyType(searchParams.get("propertyType") || "");
+      setLocation(searchParams.get("location") || "");
+      setAddress(searchParams.get("address") || "");
+      setMinPrice(searchParams.get("minPrice") || "");
+      setMaxPrice(searchParams.get("maxPrice") || "");
+      setStep(STEPS.TYPE);
+    }
+  }, [isOpen, searchParams]);
 
   const stepTitle = () => {
     switch (step) {
@@ -37,7 +53,29 @@ export default function FilterModal() {
     }
   };
 
-  const applyFilter = () => {};
+  const applyFilter = () => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (location) params.set("location", location);
+    else params.delete("location");
+
+    if (address) params.set("address", address);
+    else params.delete("address");
+
+    if (propertyType) params.set("propertyType", propertyType);
+    else params.delete("propertyType");
+
+    if (minPrice) params.set("minPrice", minPrice);
+    else params.delete("minPrice");
+
+    if (maxPrice) params.set("maxPrice", maxPrice);
+    else params.delete("maxPrice");
+
+    router.replace(`/marketplace?${params.toString()}`);
+
+    setStep(STEPS.TYPE);
+    close();
+  };
 
   return (
     <Modal onClose={close} isOpen={isOpen} title="Filter Properties">
@@ -89,7 +127,7 @@ export default function FilterModal() {
                 name="Min price"
                 label="Minimum Price"
                 type="number"
-                value={minprice}
+                value={minPrice}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setMinPrice(e.target.value)
                 }
@@ -100,7 +138,7 @@ export default function FilterModal() {
                 name="Max price"
                 label="Maximum Price"
                 type="number"
-                value={maxprice}
+                value={maxPrice}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setMaxPrice(e.target.value)
                 }
@@ -131,5 +169,13 @@ export default function FilterModal() {
         </Button>
       </div>
     </Modal>
+  );
+}
+
+export default function FilterModal() {
+  return (
+    <Suspense fallback={null}>
+      <FilterModalContent />
+    </Suspense>
   );
 }
