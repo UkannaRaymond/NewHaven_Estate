@@ -39,11 +39,17 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
           className={`flex h-20 items-center justify-between ${isTransparent ? "mt-6 rounded-3xl border border-white/10 bg-white/5 px-6 backdrop-blur-2xl" : "px-0"} `}
         >
           {/* Logo */}
-          <Link href={"/"} className="flex items-center text-2xl font-semibold">
-            <span className={isTransparent ? "text-gray-300" : "text-text"}>
+          <Link
+            href="/"
+            className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-xl font-semibold sm:text-2xl"
+          >
+            <span
+              className={`shrink-0 ${isTransparent ? "text-gray-300" : "text-text"}`}
+            >
               New
             </span>
-            <span className="bg-primary text-white px-2 py-1 rounded-tr-2xl rounded-bl-2xl">
+
+            <span className="truncate rounded-tr-2xl rounded-bl-2xl bg-primary px-2 py-1 text-white whitespace-nowrap">
               Haven Estate
             </span>
           </Link>
@@ -82,11 +88,11 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
 
           {/* mobile menu button */}
           <Button
-            className="lg:hidden flex size-11 items-center justify-center rounded-2xl bg-primary text-white shadow-md hover:bg-primary/90 transition"
+            className="ml-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary text-white shadow-md transition hover:bg-primary/90 lg:hidden"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
-            {isOpen ? <IoClose size={24} /> : <HiOutlineMenuAlt3 size={24} />}
+            {isOpen ? <IoClose size={22} /> : <HiOutlineMenuAlt3 size={22} />}
           </Button>
         </nav>
         {/* mobile menu */}

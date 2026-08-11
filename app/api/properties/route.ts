@@ -5,6 +5,7 @@ import {
   uploadToCloudinary,
 } from "@/services/cloudinary";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: NextRequest) {
   try {
@@ -71,6 +72,7 @@ export async function POST(req: NextRequest) {
         ownerId: currentUser.id,
       },
     });
+    revalidatePath("/");
     return NextResponse.json(
       {
         message: "Property created successfully",

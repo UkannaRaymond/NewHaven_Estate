@@ -73,7 +73,7 @@ This project is licensed under the **MIT License**.
 
 Software Engineer passionate about building modern, scalable, and performant web applications with React, Next.js, TypeScript, and cloud-native technologies.
 
-- GitHub: https://github.com/UkannaRaymon
+- GitHub: https://github.com/UkannaRaymond
 - X: https://X.com/UkannaRaymond
 
 ---
