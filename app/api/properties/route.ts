@@ -99,6 +99,7 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get("search");
     const propertyType = searchParams.get("propertyType");
     const location = searchParams.get("location");
+    const address = searchParams.get("address");
     const minPrice = searchParams.get("minPrice");
     const maxPrice = searchParams.get("maxPrice");
 
@@ -113,6 +114,13 @@ export async function GET(req: NextRequest) {
             mode: "insensitive",
           },
         }),
+        ...(address && {
+          address: {
+            contains: address,
+            mode: "insensitive",
+          },
+        }),
+
         ...(search && {
           OR: [
             {
