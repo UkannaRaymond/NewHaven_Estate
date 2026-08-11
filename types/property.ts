@@ -24,3 +24,277 @@ export type Property = {
 
   ownerId: string;
 };
+
+// export const dummyProperties = [
+
+//   {
+
+//     id: "1",
+
+//     title: "Modern Luxury Villa",
+
+//     location: "Beverly Hills, CA",
+
+//     price: 45000,
+
+//     type: "Villa",
+
+//     status: "rent",
+
+//     bedrooms: 5,
+
+//     bathrooms: 4,
+
+//     area: 5000,
+
+//     featured: true,
+
+//     image: "/images/property1.png",
+
+//     description:
+
+//       "Experience the epitome of modern luxury in this stunning villa located in the heart of Beverly Hills. With spacious interiors, state-of-the-art amenities, and breathtaking views, this property offers an unparalleled living experience.",
+
+//   },
+
+//   {
+
+//     id: "2",
+
+//     title: "Downtown Skyline Apartment",
+
+//     location: "New York, NY",
+
+//     price: 32000,
+
+//     type: "Apartment",
+
+//     status: "rent",
+
+//     bedrooms: 3,
+
+//     bathrooms: 2,
+
+//     area: 1800,
+
+//     featured: true,
+
+//     image: "/images/property2.png",
+
+//     description:
+
+//       "A stylish apartment with floor-to-ceiling windows, premium finishes, and panoramic views of the Manhattan skyline.",
+
+//   },
+
+//   {
+
+//     id: "3",
+
+//     title: "Beachfront Paradise Villa",
+
+//     location: "Malibu, CA",
+
+//     price: 6800000,
+
+//     type: "Villa",
+
+//     status: "sale",
+
+//     bedrooms: 6,
+
+//     bathrooms: 5,
+
+//     area: 6200,
+
+//     featured: true,
+
+//     image: "/images/property3.png",
+
+//     description:
+
+//       "Wake up to the sound of the ocean in this exclusive beachfront villa featuring private beach access and resort-style amenities.",
+
+//   },
+
+//   {
+
+//     id: "4",
+
+//     title: "Elegant Family House",
+
+//     location: "Austin, TX",
+
+//     price: 850000,
+
+//     type: "House",
+
+//     status: "sale",
+
+//     bedrooms: 4,
+
+//     bathrooms: 3,
+
+//     area: 3200,
+
+//     featured: false,
+
+//     image: "/images/property4.png",
+
+//     description:
+
+//       "A beautifully designed family home with a spacious backyard, modern kitchen, and a quiet suburban setting.",
+
+//   },
+
+//   {
+
+//     id: "5",
+
+//     title: "Luxury Penthouse Suite",
+
+//     location: "Miami, FL",
+
+//     price: 52000,
+
+//     type: "Penthouse",
+
+//     status: "rent",
+
+//     bedrooms: 4,
+
+//     bathrooms: 4,
+
+//     area: 4100,
+
+//     featured: true,
+
+//     image: "/images/property5.png",
+
+//     description:
+
+//       "An ultra-luxurious penthouse with a private rooftop terrace, infinity pool, and stunning ocean views.",
+
+//   },
+
+//   {
+
+//     id: "6",
+
+//     title: "Urban Loft Residence",
+
+//     location: "Chicago, IL",
+
+//     price: 1200000,
+
+//     type: "Loft",
+
+//     status: "sale",
+
+//     bedrooms: 2,
+
+//     bathrooms: 2,
+
+//     area: 2400,
+
+//     featured: false,
+
+//     image: "/images/property6.avif",
+
+//     description:
+
+//       "A contemporary loft with exposed brick walls, high ceilings, and an open-concept living space in a vibrant neighborhood.",
+
+//   },
+
+//   {
+
+//     id: "7",
+
+//     title: "Mountain View Cabin",
+
+//     location: "Aspen, CO",
+
+//     price: 25000,
+
+//     type: "Cabin",
+
+//     status: "rent",
+
+//     bedrooms: 3,
+
+//     bathrooms: 2,
+
+//     area: 2100,
+
+//     featured: false,
+
+//     image: "/images/property7.avif",
+
+//     description:
+
+//       "Cozy yet luxurious cabin surrounded by mountain scenery, perfect for a peaceful retreat in every season.",
+
+//   },
+
+//   {
+
+//     id: "8",
+
+//     title: "Smart City Condo",
+
+//     location: "San Francisco, CA",
+
+//     price: 1450000,
+
+//     type: "Condo",
+
+//     status: "sale",
+
+//     bedrooms: 2,
+
+//     bathrooms: 2,
+
+//     area: 1600,
+
+//     featured: true,
+
+//     image: "/images/property8.png",
+
+//     description:
+
+//       "A high-tech condominium equipped with smart home features, premium appliances, and easy access to downtown.",
+
+//   },
+
+//   {
+
+//     id: "9",
+
+//     title: "Countryside Estate Mansion",
+
+//     location: "Nashville, TN",
+
+//     price: 3800000,
+
+//     type: "Mansion",
+
+//     status: "sale",
+
+//     bedrooms: 7,
+
+//     bathrooms: 6,
+
+//     area: 9000,
+
+//     featured: true,
+
+//     image: "/images/property9.png",
+
+//     description:
+
+//       "An expansive countryside estate featuring landscaped gardens, a private guest house, and luxurious entertainment spaces.",
+
+//   },
+
+// ];
