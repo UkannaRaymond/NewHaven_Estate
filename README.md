@@ -1,4 +1,4 @@
-# 🏡 Real Estate Platform
+# 🏡 NewHaven Estate (A Real Estate Platform)
 
 A modern real estate platform built with **Next.js**, designed to make discovering and managing property listings simple and seamless.
 
@@ -14,7 +14,7 @@ A modern real estate platform built with **Next.js**, designed to make discoveri
 
 ## 🛠️ Built With
 
-**Next.js** · **TypeScript** · **Neon** · **Cloudinary** · **Better Auth** · **Google OAuth** · **Resend**
+## **Next.js** · **TypeScript** · **Neon** · **Cloudinary** · **Better Auth** · **Google OAuth** · **Resend**
 
 ## 🚀 Getting Started
 
@@ -31,16 +31,55 @@ Create a `.env.local` file and add your credentials for:
 - Google OAuth
 - Resend
 
-Then open **http://localhost:3000**.
+## Then open **http://localhost:3000**.
 
-## 📄 License
+# 🤝 Contributing
 
-This project is licensed under the MIT License.
+Contributions are welcome.
 
-👨‍💻 Author
-Ukanna Raymond
+1. Fork the repository.
+
+2. Create your feature branch.
+
+```bash
+git checkout -b feature/amazing-feature
+```
+
+3. Commit your changes.
+
+```bash
+git commit -m "Add amazing feature"
+```
+
+4. Push to your branch.
+
+```bash
+git push origin feature/amazing-feature
+```
+
+5. Open a Pull Request.
+
+---
+
+# 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+# 👨‍💻 Author
+
+**Ukanna Raymond**
 
 Software Engineer passionate about building modern, scalable, and performant web applications with React, Next.js, TypeScript, and cloud-native technologies.
 
-GitHub: https://github.com/UkannaRaymond
-X: https://X.com/UkannaRaymond
+- GitHub: https://github.com/UkannaRaymon
+- X: https://X.com/UkannaRaymond
+
+---
+
+# ⭐ Support
+
+If you found this project useful, please consider giving it a ⭐ on GitHub.
+
+It helps others discover the project and supports continued development.
