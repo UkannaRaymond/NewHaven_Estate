@@ -82,16 +82,9 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
 
           {/* mobile menu button */}
           <Button
-            className={`
-          flex size-11 items-center justify-center rounded-2xl transition
-          lg:hidden
-          ${
-            isTransparent
-              ? "border border-white/10 bg-white/5 text-white"
-              : "border border-black/10 bg-background text-text"
-          }
-          `}
+            className="lg:hidden flex size-11 items-center justify-center rounded-2xl bg-primary text-white shadow-md hover:bg-primary/90 transition"
             onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
           >
             {isOpen ? <IoClose size={24} /> : <HiOutlineMenuAlt3 size={24} />}
           </Button>
