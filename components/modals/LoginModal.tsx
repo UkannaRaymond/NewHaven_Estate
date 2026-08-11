@@ -81,7 +81,7 @@ export default function LoginModal() {
       }
 
       toast.success("Login successful");
-      router.refresh();
+      router.push("/properties");
 
       setValues({
         email: "",

@@ -53,7 +53,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
             {NavLinks.map((item) => (
               <Link
                 key={item}
-                href={item === "Home" ? "/" : `${item.toLowerCase()}`}
+                href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
                 className={`text-sm font-medium transition hover:text-primary ${isTransparent ? "text-white/80" : "text-text/70"}`}
               >
                 {item}
@@ -110,7 +110,7 @@ export default function Navbar({ variant = "transparent" }: NavbarProps) {
               {NavLinks.map((item) => (
                 <Link
                   key={item}
-                  href={item === "Home" ? "/" : `${item.toLowerCase()}`}
+                  href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
                   className={`transition hover:text-primary ${isTransparent ? "text-white/80" : "text-text/70"}`}
                 >
                   {item}

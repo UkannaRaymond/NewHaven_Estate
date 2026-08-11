@@ -15,7 +15,7 @@ interface AuthModalStore {
 
 export const useAuthModalStore = create<AuthModalStore>((set) => ({
   isLoginOpen: false,
-  isRegisterOpen: true,
+  isRegisterOpen: false,
 
   openLogin: () => set({ isLoginOpen: true, isRegisterOpen: false }),
 
