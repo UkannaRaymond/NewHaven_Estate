@@ -9,6 +9,9 @@ import PropertyTypeCard from "../layout/PropertyTypeCard";
 import Input from "../ui/Input";
 import Counter from "../properties/Counter";
 import ImageUpload from "../properties/ImageUpload";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const STEPS = {
   TYPE: 0,
@@ -20,8 +23,25 @@ const STEPS = {
 };
 
 export default function CreatePropertyModal() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(STEPS.TYPE);
   const { isOpen, close } = useCreatePropertModalStore();
+
+  const [propertyType, setPropertyType] = useState("");
+  const [location, setLocation] = useState("");
+  const [address, setAddress] = useState("");
+  const [bedrooms, setBedrooms] = useState(1);
+  const [bathrooms, setBathrooms] = useState(1);
+  const [parkingSpace, setParkingSpace] = useState(0);
+  const [area, setArea] = useState("");
+  const [title, setTitle] = useState("");
+  const [features, setFeatures] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [listingType, setListingType] = useState<"rent" | "sale">("sale");
+  const [price, setPrice] = useState("");
 
   const stepTitle = () => {
     switch (step) {
@@ -37,7 +57,6 @@ export default function CreatePropertyModal() {
         return "Upload property image";
       case STEPS.PRICING:
         return "Set property price";
-
       default:
         return "";
     }
@@ -48,21 +67,69 @@ export default function CreatePropertyModal() {
     setPreviewImage(URL.createObjectURL(file));
   };
 
-  const createListing = async () => {};
-  const [loading, setLoading] = useState(false);
-  const [propertyType, setPropertyType] = useState("");
-  const [location, setLocation] = useState("");
-  const [address, setAddress] = useState("");
-  const [bedrooms, setBedrooms] = useState(1);
-  const [bathrooms, setBathrooms] = useState(1);
-  const [parkingSpace, setParkingSpace] = useState(0);
-  const [area, setArea] = useState("");
-  const [features, setFeatures] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState<null | File>(null);
-  const [previewImage, setPreviewImage] = useState<null | string>(null);
-  const [listingType, setListingType] = useState<"rent" | "sale">("sale");
-  const [price, setPrice] = useState("");
+  const handleClose = () => {
+    setPrice("");
+    setBathrooms(1);
+    setBedrooms(1);
+    setParkingSpace(0);
+    setPropertyType("");
+    setLocation("");
+    setAddress("");
+    setArea("");
+    setTitle("");
+    setFeatures("");
+    setDescription("");
+    setImage(null);
+    setPreviewImage(null);
+    setStep(STEPS.TYPE);
+    close();
+  };
+
+  const createListing = async () => {
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+
+      formData.append("title", title);
+      formData.append("price", price);
+      formData.append("description", description);
+      formData.append("propertyType", propertyType);
+      formData.append("listingType", listingType);
+      formData.append("bedrooms", bedrooms.toString());
+      formData.append("bathrooms", bathrooms.toString());
+      formData.append("parkingSpaces", parkingSpace.toString());
+      formData.append("location", location);
+      formData.append("address", address);
+      formData.append("area", area);
+      formData.append("features", features);
+
+      if (image) {
+        formData.append("image", image);
+      }
+
+      await axios.post("/api/properties", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      toast.success("Property created successfully");
+      router.replace("/properties");
+      handleClose();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.error ||
+            "An error occurred while creating the listing",
+        );
+      } else {
+        toast.error("Something went wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Modal onClose={close} isOpen={isOpen} title="Create a new listing">
@@ -71,23 +138,23 @@ export default function CreatePropertyModal() {
         <span className="font-medium text-gray-700">{stepTitle()}</span>
       </div>
 
-      <div className="min-h-55 rounded-xl text-gray-400 p-6 border border-dashed border-gray-300">
+      <div className="min-h-55 rounded-xl border border-dashed border-gray-300 p-6 text-gray-400">
         {step === STEPS.TYPE && (
-          <div className="grid grid-cols-2 gap-4 w-full max-h-[50vh] overflow-y-scroll no-scrollbar">
+          <div className="grid max-h-[50vh] w-full grid-cols-2 gap-4 overflow-y-scroll no-scrollbar">
             {propertyTypes.map((item) => (
               <PropertyTypeCard
+                key={item.slug}
                 label={item.label}
                 icon={item.icon}
                 selected={propertyType === item.slug}
                 onClick={() => setPropertyType(item.slug)}
-                key={item.slug}
               />
             ))}
           </div>
         )}
 
         {step === STEPS.LOCATION && (
-          <div className="space-y-6 w-full">
+          <div className="w-full space-y-6">
             <Input
               name="location"
               label="Location"
@@ -96,6 +163,7 @@ export default function CreatePropertyModal() {
                 setLocation(e.target.value)
               }
             />
+
             <Input
               name="address"
               label="Address"
@@ -115,15 +183,17 @@ export default function CreatePropertyModal() {
               value={bedrooms}
               onChange={setBedrooms}
             />
+
             <Counter
               title="Bathrooms"
               subTitle="How many bathrooms"
               value={bathrooms}
               onChange={setBathrooms}
             />
+
             <Counter
               title="Parking Space"
-              subTitle="How many parking space"
+              subTitle="How many parking spaces"
               value={parkingSpace}
               onChange={setParkingSpace}
             />
@@ -143,6 +213,15 @@ export default function CreatePropertyModal() {
         {step === STEPS.FEATURES && (
           <div className="space-y-6">
             <Input
+              name="title"
+              label="Property Title"
+              value={title}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setTitle(e.target.value)
+              }
+            />
+
+            <Input
               name="features"
               label="Property Features"
               value={features}
@@ -150,7 +229,9 @@ export default function CreatePropertyModal() {
                 setFeatures(e.target.value)
               }
             />
+
             <Input
+              as="textarea"
               name="description"
               label="Description"
               value={description}
@@ -176,11 +257,12 @@ export default function CreatePropertyModal() {
               onChange={(e) =>
                 setListingType(e.target.value as "sale" | "rent")
               }
-              className="w-full h-13 border border-black/10 rounded-2xl px-4"
+              className="h-13 w-full rounded-2xl border border-black/10 px-4"
             >
               <option value="sale">For Sale</option>
               <option value="rent">For Rent</option>
             </select>
+
             <Input
               name="price"
               label={listingType === "sale" ? "Sale Price" : "Monthly Rent"}

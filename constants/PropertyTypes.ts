@@ -12,7 +12,7 @@ export const propertyTypes = [
   {
     label: "House",
     icon: FaHome,
-    slug: "home",
+    slug: "house",
   },
   {
     label: "Apartment",

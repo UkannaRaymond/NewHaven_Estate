@@ -1,3 +1,5 @@
+"use client";
+
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import Button from "../ui/button";
 import { useFilterModalStore } from "@/store/useFilterModalstore";
