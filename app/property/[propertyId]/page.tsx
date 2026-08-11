@@ -2,7 +2,6 @@ import FrontendLayout from "@/components/layout/FrontendLayout";
 import Navbar from "@/components/layout/navbar/Navbar";
 import EmailForm from "@/components/properties/EmailForm";
 import PropertyPageSkeleton from "@/components/skeleton/PropertyPageSkeleton";
-import { propertyTypes } from "@/constants/PropertyTypes";
 import { getProperty } from "@/server-action/getProperty";
 import Image from "next/image";
 import { Suspense } from "react";
@@ -111,8 +110,17 @@ async function PropertyContent({ propertyId }: { propertyId: string }) {
           </div>
 
           {/* right */}
-          <EmailForm />
-          <div></div>
+          {property?.owner && (
+            <EmailForm
+              propertyPrice={property.price}
+              propertyTitle={property.title}
+              propertyLocation={property.location}
+              propertyUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/property/${property.id}`}
+              email={property.owner.email}
+              name={property.owner.name}
+              image={property.image || "/images/avatar.png"}
+            />
+          )}
         </div>
       </div>
     </section>

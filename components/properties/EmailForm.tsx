@@ -5,6 +5,8 @@ import React, { useState } from "react";
 import Input from "../ui/Input";
 import Button from "../ui/button";
 import { LuSend } from "react-icons/lu";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 interface InputValues {
   email: string;
@@ -13,7 +15,25 @@ interface InputValues {
   message: string;
 }
 
-export default function EmailForm() {
+interface EmailFormProps {
+  name: string;
+  image: string;
+  email: string;
+  propertyTitle: string;
+  propertyLocation: string;
+  propertyPrice: number;
+  propertyUrl: string;
+}
+
+export default function EmailForm({
+  name,
+  image,
+  email,
+  propertyTitle,
+  propertyLocation,
+  propertyPrice,
+  propertyUrl,
+}: EmailFormProps) {
   const [values, setValues] = useState<InputValues>({
     email: "",
     name: "",
@@ -21,26 +41,76 @@ export default function EmailForm() {
     message: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { value, name } = e.target;
+
     setValues((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
+
+  const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!values.email || !values.message || !values.name || !values.phone) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await axios.post("/api/send-email", {
+        ownerEmail: email,
+        ownerName: name,
+        propertyTitle,
+        propertyLocation,
+        propertyPrice,
+        propertyUrl,
+        senderEmail: values.email,
+        senderName: values.name,
+        message: values.message,
+        senderPhone: values.phone,
+      });
+
+      toast.success("Message sent successfully");
+
+      setValues({
+        email: "",
+        name: "",
+        phone: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to send email");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
-      <div className="sticky top-28 rounded-3xl border border-black/5 bg-card p-8 shadow-sm">
+      <form
+        onSubmit={sendEmail}
+        className="sticky top-28 rounded-3xl border border-black/5 bg-card p-8 shadow-sm"
+      >
         <div className="flex items-center gap-4">
           <Image
-            src="/images/avatar.png"
+            src={image}
             alt="User"
             width={50}
             height={50}
-            className="object-cover rounded-full"
+            className="rounded-full object-cover"
           />
+
           <div>
-            <h3 className="text-xl font-bold text-text">Jane Doe</h3>
+            <h3 className="text-xl font-bold text-text">{name}</h3>
             <p className="text-text/60">Property Agent</p>
           </div>
         </div>
@@ -53,6 +123,7 @@ export default function EmailForm() {
             name="name"
             value={values.name}
           />
+
           <Input
             onChange={handleChange}
             id="contact-email"
@@ -60,13 +131,15 @@ export default function EmailForm() {
             name="email"
             value={values.email}
           />
+
           <Input
             onChange={handleChange}
-            id="contact-Phone"
+            id="contact-phone"
             label="Your Phone"
             name="phone"
             value={values.phone}
           />
+
           <Input
             onChange={handleChange}
             id="contact-message"
@@ -77,10 +150,10 @@ export default function EmailForm() {
           />
         </div>
 
-        <Button fullWidth className="mt-3" icon={<LuSend />}>
-          Send Email
+        <Button loading={loading} fullWidth className="mt-3" icon={<LuSend />}>
+          Send mail
         </Button>
-      </div>
+      </form>
     </div>
   );
 }

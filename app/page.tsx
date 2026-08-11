@@ -40,7 +40,7 @@ export default function Home() {
               </h2>
 
               <p>
-                Discover Extraordinary Homes in the World's Most Desirable
+                Discover Extraordinary Homes in the World&apos;s Most Desirable
                 Destinations.
               </p>
 

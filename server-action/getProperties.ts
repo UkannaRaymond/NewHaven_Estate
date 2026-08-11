@@ -26,7 +26,7 @@ export async function getProperties(params?: GetPropertiesParam) {
     );
 
     return data;
-  } catch (error) {
+  } catch {
     throw new Error("Failed to fetch properties");
   }
 }
